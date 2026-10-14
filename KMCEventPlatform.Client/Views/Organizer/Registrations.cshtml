@@ -1,0 +1,90 @@
+﻿@model IEnumerable<
+KMCEventPlatform.Client.Models.RegistrationViewModel >
+
+@{
+    ViewData["Title"] = "Event Participants";
+}
+
+<div class="d-flex justify-content-between
+    align-items-center mb-4">
+    <div>
+        <h1>Registered Participants</h1>
+
+        <p class="text-muted mb-0">
+            Event: @ViewBag.EventTitle
+        </p>
+    </div>
+
+    <a asp-controller="Organizer"
+       asp-action="Dashboard"
+       class="btn btn-secondary">
+        Back to Dashboard
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No participants have registered for this event.
+    </div>
+}
+else
+{
+    <div class="mb-3">
+        <strong>Total registrations:</strong>
+        @Model.Count(registration =>
+            registration.Status == "Registered")
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered
+            table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Participant</th>
+                    <th>Email</th>
+                    <th>Registration Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var registration in Model)
+                {
+                    <tr>
+                        <td>
+                            @registration.ParticipantName
+                        </td>
+
+                        <td>
+                            @registration.ParticipantEmail
+                        </td>
+
+                        <td>
+                            @(registration.RegistrationDate
+                                .ToString(
+                                    "dd MMMM yyyy HH:mm"
+                                ))
+                        </td>
+
+                        <td>
+                            @if (registration.Status
+                                == "Registered")
+                            {
+                                <span class="badge bg-success">
+                                    Registered
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    Cancelled
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

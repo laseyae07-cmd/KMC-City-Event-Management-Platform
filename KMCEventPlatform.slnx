@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="KMCEventPlatform.API/KMCEventPlatform.API.csproj" />
+  <Project Path="KMCEventPlatform.Client/KMCEventPlatform.Client.csproj" />
+  <Project Path="KMCEventPlatform.Tests/KMCEventPlatform.Tests.csproj" Id="bdfa337c-b945-426c-a4bf-bb9064eb7003" />
+</Solution>

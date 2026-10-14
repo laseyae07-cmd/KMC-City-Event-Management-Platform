@@ -1,0 +1,42 @@
+# Visual Studio 2015+ cache/options directory
+.vs/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+[Tt]est[Rr]esult*/
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# Publish Profiles
+*.pubxml
+*.pubxml.user
+*.publishproj
+
+# Local environment settings and secrets
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# NuGet Packages directory
+*.nupkg
+.nuget/
+packages/
+!packages/build/
+
+# JetBrains Rider configuration (if collaborating with Rider users)
+.idea/
+*.sln.iml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db

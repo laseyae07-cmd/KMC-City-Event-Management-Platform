@@ -1,0 +1,127 @@
+﻿@model IEnumerable<
+KMCEventPlatform.Client.Models.RegistrationViewModel >
+
+@{
+    ViewData["Title"] = "My Registrations";
+}
+
+<h1 class="mb-4">My Event Registrations</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have not registered for any events.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered
+            table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Registered On</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var registration in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Events"
+                               asp-action="Details"
+                               asp-route-id="@registration.EventId">
+                                @registration.EventTitle
+                            </a>
+                        </td>
+
+                        <td>
+                            @(registration.EventDate
+                                .ToString("dd MMMM yyyy"))
+                        </td>
+
+                        <td>
+                            @registration.Venue
+                        </td>
+
+                        <td>
+                            @(registration.RegistrationDate
+                                .ToString("dd MMMM yyyy HH:mm"))
+                        </td>
+
+                        <td>
+                            @if (registration.Status
+                                == "Registered")
+                            {
+                                <span class="badge bg-success">
+                                    Registered
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    Cancelled
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (registration.Status
+                                == "Registered")
+                            {
+                                <form asp-controller="Registrations"
+                                      asp-action="Cancel"
+                                      method="post">
+
+                                    <input type="hidden"
+                                           name="registrationId"
+                                           value="@registration.RegistrationId" />
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm(
+                                        'Are you sure you want to cancel this registration?');">
+                                        Cancel
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    No action
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

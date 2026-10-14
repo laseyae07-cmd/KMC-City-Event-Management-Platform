@@ -1,0 +1,209 @@
+﻿@model KMCEventPlatform.Client.Models.EventViewModel?
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+else if (Model != null)
+{
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+            <span class="badge bg-primary mb-3">
+                @Model.EventTypeName
+            </span>
+
+            <h1 class="mb-3">
+                @Model.Title
+            </h1>
+
+            <p class="lead">
+                @Model.Description
+            </p>
+
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-3">
+                    Date
+                </dt>
+
+                <dd class="col-sm-9">
+                    @(Model.EventDate.ToString(
+                        "dddd, dd MMMM yyyy"))
+                </dd>
+
+                <dt class="col-sm-3">
+                    Time
+                </dt>
+
+                <dd class="col-sm-9">
+                    @(Model.StartTime.ToString(@"hh\:mm"))
+                    -
+                    @(Model.EndTime.ToString(@"hh\:mm"))
+                </dd>
+
+                <dt class="col-sm-3">
+                    Venue
+                </dt>
+
+                <dd class="col-sm-9">
+                    @Model.Venue
+                </dd>
+
+                <dt class="col-sm-3">
+                    Event Type
+                </dt>
+
+                <dd class="col-sm-9">
+                    @Model.EventTypeName
+                </dd>
+
+                <dt class="col-sm-3">
+                    Organizer
+                </dt>
+
+                <dd class="col-sm-9">
+                    @Model.OrganizerName
+                </dd>
+
+                <dt class="col-sm-3">
+                    Status
+                </dt>
+
+                <dd class="col-sm-9">
+                    @if (Model.Status == "Upcoming")
+                    {
+                        <span class="badge bg-success">
+                            Upcoming
+                        </span>
+                    }
+                    else if (Model.Status == "Cancelled")
+                    {
+                        <span class="badge bg-danger">
+                            Cancelled
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            Completed
+                        </span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">
+                    Registered Participants
+                </dt>
+
+                <dd class="col-sm-9">
+                    @Model.RegisteredParticipants
+                    /
+                    @Model.MaximumParticipants
+                </dd>
+
+                <dt class="col-sm-3">
+                    Available Places
+                </dt>
+
+                <dd class="col-sm-9">
+                    @(Model.MaximumParticipants -
+                      Model.RegisteredParticipants)
+                </dd>
+            </dl>
+
+            <hr />
+
+            <div class="d-flex gap-2 flex-wrap">
+
+                @if (Context.Session.GetString("UserRole")
+                    == "Participant")
+                {
+                    if (Model.Status == "Upcoming" &&
+                        Model.RegisteredParticipants <
+                        Model.MaximumParticipants)
+                    {
+                        <form asp-controller="Registrations"
+                              asp-action="Register"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="eventId"
+                                   value="@Model.EventId" />
+
+                            <button type="submit"
+                                    class="btn btn-success">
+                                Register for Event
+                            </button>
+                        </form>
+                    }
+                    else if (Model.RegisteredParticipants >=
+                             Model.MaximumParticipants)
+                    {
+                        <button type="button"
+                                class="btn btn-secondary"
+                                disabled>
+                            Event Full
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="btn btn-secondary"
+                                disabled>
+                            Registration Unavailable
+                        </button>
+                    }
+                }
+                else if (string.IsNullOrWhiteSpace(
+                    Context.Session.GetString("JwtToken")))
+                {
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="btn btn-success">
+                        Login to Register
+                    </a>
+                }
+
+                <a asp-controller="Events"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Back to Events
+                </a>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        Event details could not be loaded.
+    </div>
+
+    <a asp-controller="Events"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Back to Events
+    </a>
+}
